@@ -1,0 +1,13 @@
+asgiref==3.8.1
+autopep8==2.3.1
+Django==5.1.4
+django-silk==5.3.2
+djangorestframework==3.15.2
+Faker==33.3.0
+gprof2dot==2024.6.6
+pillow==11.1.0
+pycodestyle==2.12.1
+python-dateutil==2.9.0.post0
+six==1.17.0
+sqlparse==0.5.3
+typing_extensions==4.12.2
