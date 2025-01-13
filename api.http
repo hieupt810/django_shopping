@@ -37,3 +37,20 @@ Authorization: Bearer {{access}}
 ###
 GET http://{{host}}/api/user-orders/ HTTP/1.1
 Authorization: Bearer {{access}}
+
+###
+GET http://{{host}}/api/products/1/ HTTP/1.1
+
+###
+PUT http://{{host}}/api/products/1/ HTTP/1.1
+Content-Type: application/json
+
+{
+  "description": "Oil approach radio require fight successful.",
+  "name": "Tina Miles",
+  "price": "6778.35",
+  "stock": 1
+}
+
+###
+DELETE http://{{host}}/api/products/1/ HTTP/1.1

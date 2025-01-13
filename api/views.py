@@ -1,8 +1,9 @@
 from django.db.models import Max
+from drf_spectacular.utils import extend_schema
 from rest_framework import generics, status
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.decorators import api_view
+from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.views import APIView
 
 from api.models import Order, Product
 from api.serializers import (
@@ -20,20 +21,32 @@ class ProductListCreateAPIView(generics.ListCreateAPIView):
 	def get_permissions(self):
 		self.permission_classes = [AllowAny]
 		if self.request.method == 'POST':
-			self.permission_classes = [IsAuthenticated]
+			self.permission_classes = [IsAdminUser]
 
 		return super().get_permissions()
 
 
-class ProductDetailAPIView(generics.RetrieveAPIView):
+class ProductDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
 	queryset = Product.objects.all()
 	serializer_class = ProductSerializer
 	lookup_url_kwarg = 'product_id'
 
+	def get_permissions(self):
+		self.permission_classes = [AllowAny]
+		if self.request.method in ['PUT', 'PATCH', 'DELETE']:
+			self.permission_classes = [IsAdminUser]
 
-class ProductInfoAPIView(APIView):
+		return super().get_permissions()
+
+
+class ProductInfoAPIView(generics.GenericAPIView):
+	queryset = Product.objects.all()
+	serializer_class = ProductInfoSerializer
+
+	@extend_schema(responses=ProductInfoSerializer)
+	@api_view(['GET'])
 	def get(self, request):
-		products = Product.objects.all()
+		products = self.get_queryset()
 		serializer = ProductInfoSerializer(
 			{
 				'products': products,

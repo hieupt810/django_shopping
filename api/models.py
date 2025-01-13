@@ -2,6 +2,8 @@ import uuid
 
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from drf_spectacular.utils import extend_schema_field
+from rest_framework import serializers
 
 
 # Create your models here.
@@ -57,6 +59,9 @@ class OrderItem(models.Model):
 	quantity = models.PositiveIntegerField()
 
 	@property
+	@extend_schema_field(
+		serializers.DecimalField(max_digits=10, decimal_places=2)
+	)
 	def item_subtotal(self):
 		return self.product.price * self.quantity
 

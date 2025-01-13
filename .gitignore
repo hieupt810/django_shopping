@@ -4,3 +4,4 @@ __pycache__/
 
 api/migrations/
 db.sqlite3
+schema.yml

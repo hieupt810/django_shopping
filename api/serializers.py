@@ -1,3 +1,4 @@
+from drf_spectacular.utils import extend_schema_field
 from rest_framework import serializers
 
 from api.models import Order, OrderItem, Product
@@ -45,9 +46,13 @@ class OrderSerializer(serializers.ModelSerializer):
 	)
 	total_price = serializers.SerializerMethodField(method_name='get_total')
 
+	@extend_schema_field(serializers.CharField(max_length=255))
 	def get_formatted_date(self, obj):
 		return obj.created_at.strftime('%B %d, %Y')
 
+	@extend_schema_field(
+		serializers.DecimalField(max_digits=10, decimal_places=2)
+	)
 	def get_total(self, obj):
 		order_items = obj.items.all()
 		return sum(order_items.item_subtotal for order_items in order_items)
