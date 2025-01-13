@@ -48,6 +48,7 @@ class OrderItemSerializer(serializers.ModelSerializer):
 class OrderSerializer(serializers.ModelSerializer):
 	"""Order serializer"""
 
+	order_id = serializers.UUIDField(read_only=True)
 	items = OrderItemSerializer(many=True, read_only=True)
 	created_at = serializers.SerializerMethodField(
 		method_name='get_formatted_date'
