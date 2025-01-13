@@ -1,7 +1,8 @@
 @hostname=127.0.0.1
 @port=8000
 @host={{hostname}}:{{port}}
-
+@refresh=
+@access=
 POST http://{{host}}/api/token/ HTTP/1.1
 Content-Type: application/json
 
@@ -10,11 +11,21 @@ Content-Type: application/json
   "password": "test"
 }
 
+###
+POST http://{{host}}/api/token/refresh/ HTTP/1.1
+Content-Type: application/json
+
+{
+  "refresh": "{{refresh}}"
+}
+
+###
 GET http://{{host}}/api/products/ HTTP/1.1
 
 ###
 POST http://{{host}}/api/products/ HTTP/1.1
 Content-Type: application/json
+Authorization: Bearer {{access}}
 
 {
   "name": "Television",
@@ -22,3 +33,7 @@ Content-Type: application/json
   "stock": 45,
   "description": "A television"
 }
+
+###
+GET http://{{host}}/api/user-orders/ HTTP/1.1
+Authorization: Bearer {{access}}
