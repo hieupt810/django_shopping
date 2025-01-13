@@ -8,10 +8,14 @@ from rest_framework import serializers
 
 # Create your models here.
 class User(AbstractUser):
+	"""User model"""
+
 	pass
 
 
 class Product(models.Model):
+	"""Product model"""
+
 	name = models.CharField(max_length=255)
 	description = models.TextField()
 	price = models.DecimalField(max_digits=10, decimal_places=2)
@@ -27,6 +31,8 @@ class Product(models.Model):
 
 
 class Order(models.Model):
+	"""Order model"""
+
 	class StatusChoices(models.TextChoices):
 		PENDING = 'Pending'
 		COMPLETED = 'Completed'
@@ -52,6 +58,8 @@ class Order(models.Model):
 
 
 class OrderItem(models.Model):
+	"""Order item model"""
+
 	order = models.ForeignKey(
 		Order, on_delete=models.CASCADE, related_name='items'
 	)

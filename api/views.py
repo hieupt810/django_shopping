@@ -13,8 +13,9 @@ from api.serializers import (
 )
 
 
-# products
 class ProductListCreateAPIView(generics.ListCreateAPIView):
+	"""List and create products"""
+
 	queryset = Product.objects.all()
 	serializer_class = ProductSerializer
 
@@ -27,6 +28,8 @@ class ProductListCreateAPIView(generics.ListCreateAPIView):
 
 
 class ProductDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
+	"""Retrieve, update and delete a product"""
+
 	queryset = Product.objects.all()
 	serializer_class = ProductSerializer
 	lookup_url_kwarg = 'product_id'
@@ -40,6 +43,8 @@ class ProductDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
 
 
 class ProductInfoAPIView(generics.GenericAPIView):
+	"""Get products info"""
+
 	queryset = Product.objects.all()
 	serializer_class = ProductInfoSerializer
 
@@ -60,13 +65,16 @@ class ProductInfoAPIView(generics.GenericAPIView):
 		return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-# orders
 class OrderListAPIView(generics.ListAPIView):
+	"""List orders"""
+
 	queryset = Order.objects.prefetch_related('items__product')
 	serializer_class = OrderSerializer
 
 
 class UserOrderListAPIView(generics.ListAPIView):
+	"""List orders of the authenticated user"""
+
 	queryset = Order.objects.prefetch_related('items__product')
 	serializer_class = OrderSerializer
 	permission_classes = [IsAuthenticated]

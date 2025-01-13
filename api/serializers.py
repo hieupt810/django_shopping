@@ -6,6 +6,8 @@ from api.models import Order, OrderItem, Product
 
 # Product
 class ProductSerializer(serializers.ModelSerializer):
+	"""Product serializer"""
+
 	class Meta:
 		model = Product
 		fields = sorted(['name', 'description', 'price', 'stock'])
@@ -18,6 +20,8 @@ class ProductSerializer(serializers.ModelSerializer):
 
 
 class ProductInfoSerializer(serializers.Serializer):
+	"""Product info serializer"""
+
 	products = ProductSerializer(many=True)
 	count = serializers.IntegerField()
 	max_price = serializers.FloatField()
@@ -25,6 +29,8 @@ class ProductInfoSerializer(serializers.Serializer):
 
 # Order
 class OrderItemSerializer(serializers.ModelSerializer):
+	"""Order item serializer"""
+
 	product_name = serializers.CharField(
 		max_length=255, source='product.name', read_only=True
 	)
@@ -40,6 +46,8 @@ class OrderItemSerializer(serializers.ModelSerializer):
 
 
 class OrderSerializer(serializers.ModelSerializer):
+	"""Order serializer"""
+
 	items = OrderItemSerializer(many=True, read_only=True)
 	created_at = serializers.SerializerMethodField(
 		method_name='get_formatted_date'

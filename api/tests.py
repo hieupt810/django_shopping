@@ -30,6 +30,7 @@ class UserOrderTestCase(TestCase):
 				Order.objects.create(user=user)
 
 	def test_user_order_enpoint_retrieves_only_authenticated_user_orders(self):
+		"""Test that the user orders endpoint retrieves only the authenticated user's orders"""
 		for username in self.usernames:
 			user = User.objects.get(username=username)
 			self.client.force_login(user)
@@ -41,5 +42,6 @@ class UserOrderTestCase(TestCase):
 			self.assertTrue(all(order['user'] == user.id for order in orders))
 
 	def test_user_order_enpoint_unauthenticated(self):
+		"""Test that unauthenticated users can't access the user orders endpoint"""
 		response = self.client.get(reverse('user-orders'))
 		self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
