@@ -1,7 +1,7 @@
 from django.db.models import Max
-from django.shortcuts import get_object_or_404
-from rest_framework import status
+from rest_framework import generics, status
 from rest_framework.decorators import api_view
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from api.models import Order, Product
@@ -9,20 +9,15 @@ from api.serializers import OrderSerializer, ProductInfoSerializer, ProductSeria
 
 
 # products
-@api_view(['GET'])
-def product_list(request):
-	products = Product.objects.all()
-	serializer = ProductSerializer(products, many=True)
-
-	return Response(serializer.data, status=status.HTTP_200_OK)
+class ProductListAPIView(generics.ListAPIView):
+	queryset = Product.objects.filter(stock__gt=0)
+	serializer_class = ProductSerializer
 
 
-@api_view(['GET'])
-def product_detail(request, pk):
-	product = get_object_or_404(Product, pk=pk)
-	serializer = ProductSerializer(product)
-
-	return Response(serializer.data, status=status.HTTP_200_OK)
+class ProductDetailAPIView(generics.RetrieveAPIView):
+	queryset = Product.objects.all()
+	serializer_class = ProductSerializer
+	lookup_url_kwarg = 'product_id'
 
 
 @api_view(['GET'])
@@ -40,9 +35,15 @@ def product_info(request):
 
 
 # orders
-@api_view(['GET'])
-def order_list(request):
-	orders = Order.objects.prefetch_related('items__product')
-	serializer = OrderSerializer(orders, many=True)
+class OrderListAPIView(generics.ListAPIView):
+	queryset = Order.objects.prefetch_related('items__product')
+	serializer_class = OrderSerializer
 
-	return Response(serializer.data, status=status.HTTP_200_OK)
+
+class UserOrderListAPIView(generics.ListAPIView):
+	queryset = Order.objects.prefetch_related('items__product')
+	serializer_class = OrderSerializer
+	permission_classes = [IsAuthenticated]
+
+	def get_queryset(self):
+		return super().get_queryset().filter(user=self.request.user)
