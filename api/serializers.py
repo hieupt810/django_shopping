@@ -7,7 +7,7 @@ from api.models import Order, OrderItem, Product
 class ProductSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Product
-		fields = sorted(['id', 'name', 'description', 'price', 'stock'])
+		fields = sorted(['name', 'description', 'price', 'stock'])
 
 	def validate_price(self, value):
 		if value <= 0:
