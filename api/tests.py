@@ -19,7 +19,11 @@ class UserOrderTestCase(TestCase):
 	def setUp(self):
 		users = []
 		for username in self.usernames:
-			users.append(User.objects.create_user(username=username, password=random_string()))
+			users.append(
+				User.objects.create_user(
+					username=username, password=random_string()
+				)
+			)
 
 		for user in users:
 			for _ in range(random.randint(1, 10)):

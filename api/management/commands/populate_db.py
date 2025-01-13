@@ -14,7 +14,9 @@ class Command(BaseCommand):
 		# Create an superuser if it doesn't exist
 		user = User.objects.filter(username='admin').first()
 		if not user:
-			user = User.objects.create_superuser(username='admin', password='test')
+			user = User.objects.create_superuser(
+				username='admin', password='test'
+			)
 
 		# Create some products
 		fake: Faker = Faker()
@@ -34,4 +36,6 @@ class Command(BaseCommand):
 			order = Order.objects.create(user=user)
 
 			for product in sample(list(products), randint(1, 5)):
-				OrderItem.objects.create(order=order, product=product, quantity=randint(1, 10))
+				OrderItem.objects.create(
+					order=order, product=product, quantity=randint(1, 10)
+				)

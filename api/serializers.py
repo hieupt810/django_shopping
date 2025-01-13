@@ -24,19 +24,25 @@ class ProductInfoSerializer(serializers.Serializer):
 
 # Order
 class OrderItemSerializer(serializers.ModelSerializer):
-	product_name = serializers.CharField(max_length=255, source='product.name', read_only=True)
+	product_name = serializers.CharField(
+		max_length=255, source='product.name', read_only=True
+	)
 	product_price = serializers.DecimalField(
 		max_digits=10, decimal_places=2, source='product.price', read_only=True
 	)
 
 	class Meta:
 		model = OrderItem
-		fields = sorted(['product_name', 'product_price', 'quantity', 'item_subtotal'])
+		fields = sorted(
+			['product_name', 'product_price', 'quantity', 'item_subtotal']
+		)
 
 
 class OrderSerializer(serializers.ModelSerializer):
 	items = OrderItemSerializer(many=True, read_only=True)
-	created_at = serializers.SerializerMethodField(method_name='get_formatted_date')
+	created_at = serializers.SerializerMethodField(
+		method_name='get_formatted_date'
+	)
 	total_price = serializers.SerializerMethodField(method_name='get_total')
 
 	def get_formatted_date(self, obj):
@@ -48,4 +54,6 @@ class OrderSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = Order
-		fields = sorted(['order_id', 'user', 'status', 'created_at', 'items', 'total_price'])
+		fields = sorted(
+			['order_id', 'user', 'status', 'created_at', 'items', 'total_price']
+		)

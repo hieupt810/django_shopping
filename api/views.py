@@ -1,17 +1,28 @@
 from django.db.models import Max
 from rest_framework import generics, status
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from api.models import Order, Product
-from api.serializers import OrderSerializer, ProductInfoSerializer, ProductSerializer
+from api.serializers import (
+	OrderSerializer,
+	ProductInfoSerializer,
+	ProductSerializer,
+)
 
 
 # products
 class ProductListCreateAPIView(generics.ListCreateAPIView):
 	queryset = Product.objects.all()
 	serializer_class = ProductSerializer
+
+	def get_permissions(self):
+		self.permission_classes = [AllowAny]
+		if self.request.method == 'POST':
+			self.permission_classes = [IsAuthenticated]
+
+		return super().get_permissions()
 
 
 class ProductDetailAPIView(generics.RetrieveAPIView):
@@ -27,7 +38,9 @@ class ProductInfoAPIView(APIView):
 			{
 				'products': products,
 				'count': products.count(),
-				'max_price': products.aggregate(max_price=Max('price'))['max_price'],
+				'max_price': products.aggregate(max_price=Max('price'))[
+					'max_price'
+				],
 			}
 		)
 
